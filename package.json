@@ -1,0 +1,19 @@
+{
+  "name": "devbuddy_backend",
+  "version": "1.0.0",
+  "description": "Tinder For Devs",
+  "main": " ",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Pallavi Thorat",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1" 
+  }
+}
