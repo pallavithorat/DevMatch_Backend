@@ -1,29 +1,35 @@
 const express = require('express');
 
+const connectDB = require("./config/database");
+
 const app = express(); //creating a new web server, so i have to call listen over here so anybody can connect to us
 
-//this will only handle GET call to /user
-app.get("/user", (req,res) =>{
-    res.send({firstName: "Pallavi" , lastName: "Thorat"});
-});
+const User = require("./models/user");
 
-app.post("/user", (req,res) =>{
-    //save data to db
-    res.send("data saved to DB")
-});
+app.post("/signup", async (req, res) => {
+    // Creating a new instance of the User model
+    const user = new User({
+      firstName: "Vi",
+      lastName: "Dume",
+      emailId: "VisDum@gmail.com",
+      password: "Pall@123",
+    });
 
-//this will match all http methods API calls to /test
-app.use("/test", (req,res) => {
-    res.send("Hello from Server");
-})
+    try {
+        await user.save();
+        res.send("User Added successfully!");
+      } catch (err) {
+        res.status(400).send("Error saving the user:" + err.message);
+      }
+    });
 
-app.delete("/user", (req,res) =>{
-    //save data to db
-    res.send("Deleted")
-});
-
-
-
-app.listen(3000, () =>{
-    console.log("Server is listening on port 3000");
-});
+    connectDB()
+    .then(() => {
+      console.log("Database connection established...");
+      app.listen(3000, () => {
+        console.log("Server is successfully listening on port 7777...");
+      });
+    })
+    .catch((err) => {
+      console.error("Database cannot be connected!!");
+    });
