@@ -6,14 +6,11 @@ const app = express(); //creating a new web server, so i have to call listen ove
 
 const User = require("./models/user");
 
+app.use(express.json()); //middleware
+
 app.post("/signup", async (req, res) => {
-    // Creating a new instance of the User model
-    const user = new User({
-      firstName: "Vi",
-      lastName: "Dume",
-      emailId: "VisDum@gmail.com",
-      password: "Pall@123",
-    });
+     //   Creating a new instance of the User model
+    const user = new User(req.body);
 
     try {
         await user.save();
