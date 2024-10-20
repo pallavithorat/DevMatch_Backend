@@ -69,11 +69,12 @@ app.delete("/user", async (req, res) => {
     try {
       const user = await User.findByIdAndUpdate({ _id: userId }, data, {
         returnDocument: "after",
+        runValidators: true,
       });
       console.log(user);
       res.send("User updated successfully");
     } catch (err) {
-      res.status(400).send("Something went wrong ");
+      res.status(400).send("UPDATE FAILED:" + err.message);
     }
   });
 
@@ -81,7 +82,7 @@ app.delete("/user", async (req, res) => {
     .then(() => {
       console.log("Database connection established...");
       app.listen(3000, () => {
-        console.log("Server is successfully listening on port 7777...");
+        console.log("Server is successfully listening on port 3000...");
       });
     })
     .catch((err) => {
