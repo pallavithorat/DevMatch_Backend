@@ -1,15 +1,16 @@
 const express = require('express');
-
 const connectDB = require("./config/database");
-
 const app = express(); //creating a new web server, so i have to call listen over here so anybody can connect to us
-
 const User = require("./models/user");
-
 const { validateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+
 
 app.use(express.json()); //middleware
+app.use(cookieParser());
+
 
 app.post("/signup", async (req, res) => {
      //   Creating a new instance of the User model
@@ -45,10 +46,35 @@ app.post("/signup", async (req, res) => {
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (isPasswordValid) {
+           // Create a JWT Token
+      const token = await jwt.sign({ _id: user._id }, "DEV@Buddy$710");
+      // Add the token to cookie and send the response back to the user
+      res.cookie("token", token);
+
           res.send("Login Successful!!!");
         } else {
           throw new Error("Invalid credentials");
         }
+      } catch (err) {
+        res.status(400).send("ERROR : " + err.message);
+      }
+    });
+
+    app.get("/profile", async (req, res) => {
+      try {
+        const cookies = req.cookies;
+        const { token } = cookies;
+        if (!token) {
+          throw new Error("Invalid Token");
+        }
+        //validate token
+        const decodedMessage = await jwt.verify(token, "DEV@Buddy$710");
+        const { _id } = decodedMessage;
+        const user = await User.findById(_id); //finding user from DB
+        if (!user) {
+          throw new Error("User does not exist");
+        }
+        res.send(user);
       } catch (err) {
         res.status(400).send("ERROR : " + err.message);
       }
