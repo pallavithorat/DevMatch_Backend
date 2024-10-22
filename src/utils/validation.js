@@ -26,7 +26,26 @@ const validateEditProfileData = (req) => {
   );
   return isEditAllowed;
 };
+
+function validatePasswordChangeData(req) {
+  const { oldPassword, newPassword } = req.body;
+
+  // Check if both old and new passwords are provided
+  if (!oldPassword || !newPassword) {
+    return false;
+  }
+
+  // Add more rules for new password (e.g., minimum length of 8 characters)
+  if (newPassword.length < 8) {
+    return false;
+  }
+
+  // can add more validations in future here, like checking for special characters or numbers
+  return true;
+}
+
 module.exports = {
   validateSignUpData,
   validateEditProfileData,
+  validatePasswordChangeData
 };
