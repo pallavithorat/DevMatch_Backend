@@ -8,13 +8,10 @@
 - PATCH /profile/edit
 - PATCH /profile/password //forgot password API
 ## connectionRequestRouter
-- POST /request/send/intereted/:userId
-- POST /request/send/ignored/:userId
-- POST /request/review/accepted/:requestId
-- POST /request/review/rejected/:requestId
 
+- POST /request/send/:status/:userId     //dynamic status
 
-- POST /request/send/:status/:userId //dynamic status
+- POST /request/review/:status/:requestId
 
 
 ## userRouter

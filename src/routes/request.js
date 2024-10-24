@@ -55,5 +55,44 @@ requestRouter.post(
   }
 );
 
+//API Planning
+//validate status
+//accept or reject the connection request, so toUserId should be logged in 
+//if status is ignore we cannnot accept or reject
+//status should be interested
+//check requestId, it should be valid 
+//A has sent connection req to e , means A is interested in e, now e will accept it or reject it.
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedInUser = req.user;
+      const { status, requestId } = req.params;
+      const allowedStatus = ["accepted", "rejected"];
+      if (!allowedStatus.includes(status)) {
+        return res.status(400).json({ messaage: "Status not allowed!" });
+      }
 
-module.exports = requestRouter;
+      //if requestId is present in DB or not , and  whether toUserId is loggedInUser , also checked status is interested
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+      if (!connectionRequest) {
+        return res
+          .status(404)
+          .json({ message: "Connection request not found" });
+      }
+      connectionRequest.status = status;
+      const data = await connectionRequest.save();
+      res.json({ message: "Connection request " + status, data });
+    } catch (err) {
+      res.status(400).send("ERROR: " + err.message);
+    }
+  }
+);
+
+
+module.exports = requestRouter; 
