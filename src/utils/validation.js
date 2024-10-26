@@ -27,6 +27,7 @@ const validateEditProfileData = (req) => {
   return isEditAllowed;
 };
 
+//Validation for password
 function validatePasswordChangeData(req) {
   const { oldPassword, newPassword } = req.body;
 
