@@ -6,6 +6,15 @@ const cookieParser = require("cookie-parser");
 app.use(express.json()); //middleware
 app.use(cookieParser());
 
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
