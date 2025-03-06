@@ -3,6 +3,8 @@ const connectDB = require("./config/database");
 const app = express(); //creating a new web server, so i have to call listen over here so anybody can connect to us
 const cookieParser = require("cookie-parser");
 
+require('dotenv').config();
+
 app.use(express.json()); //middleware
 app.use(cookieParser());
 
@@ -31,8 +33,8 @@ app.use("/", userRouter);
   connectDB()
     .then(() => {
       console.log("Database connection established...");
-      app.listen(3000, () => {
-        console.log("Server is successfully listening on port 3000...");
+      app.listen(process.env.PORT, () => {
+        console.log("Server is successfully listening on port 7777...");
       });
     })
     .catch((err) => {
