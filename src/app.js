@@ -4,6 +4,7 @@ const app = express(); //creating a new web server, so i have to call listen ove
 const cookieParser = require("cookie-parser");
 
 require('dotenv').config();
+require("./utils/cronjob");
 
 app.use(express.json()); //middleware
 app.use(cookieParser());
