@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require("./config/database");
 const app = express(); //creating a new web server, so i have to call listen over here so anybody can connect to us
 const cookieParser = require("cookie-parser");
+const http = require("http");
 
 require('dotenv').config();
 require("./utils/cronjob");
@@ -25,16 +26,24 @@ const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
+const initializeSocket = require("./utils/socket");
+ const chatRouter = require("./routes/chat");
+
+
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+app.use("/", chatRouter);
+ 
+ const server = http.createServer(app);
+ initializeSocket(server);
 
   connectDB()
     .then(() => {
       console.log("Database connection established...");
-      app.listen(process.env.PORT, () => {
+      server.listen(process.env.PORT, () => {
         console.log("Server is successfully listening on port 7777...");
       });
     })
